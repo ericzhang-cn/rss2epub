@@ -1,0 +1,5 @@
+title: Feeds to eBook
+author: rss2epub
+feeds:
+    - http://www.engadget.com/rss.xml
+    - http://www.36kr.com/feed/atom
