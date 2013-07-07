@@ -6,8 +6,5 @@ target
 .project
 .settings
 
-# Books
-*.epub
-
 # Others
 .DS_Store
