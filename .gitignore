@@ -1,5 +1,13 @@
+# Maven build directory
 target
-.DS_Store
+
+# Eclipse project files
 .classpath
 .project
 .settings
+
+# Books
+*.epub
+
+# Others
+.DS_Store
