@@ -29,6 +29,7 @@ rss2epub的配置文件使用[YAML](http://www.yaml.org)格式。配置文件结
 ```bash
 title: 电子书标题
 author: 电子书作者
+image: 是否抓取图片
 feeds:
     - Feed源URL
     - Feed源URL
