@@ -8,8 +8,7 @@
   mvn package
   ```
 
-  完成项目的编译，此时编译好的rss2epub会放在target目录下，而相关
-  依赖会被自动拷贝到target/lib下
+  完成项目的编译，此时编译好的rss2epub会放在target目录下，而相关依赖会被自动拷贝到target/lib下
 + 工具的使用方法为
 
   ```bash
