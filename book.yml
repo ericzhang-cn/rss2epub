@@ -1,6 +1,6 @@
-title: Feeds to eBook
-author: rss2epub
-image: true
-feeds:
-    - http://www.engadget.com/rss.xml
+title: Feeds to eBook # 标题
+author: rss2epub      # 作者
+image: true           # 是否包含图片
+feeds:                # RSS源
+    - http://www.zhihu.com/rss
     - http://www.36kr.com/feed/atom
