@@ -1,5 +1,6 @@
 # Maven build directory
 target
+book.epub
 
 # Eclipse project files
 .classpath

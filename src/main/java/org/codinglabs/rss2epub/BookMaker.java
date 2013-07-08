@@ -90,6 +90,7 @@ public class BookMaker {
             book.getMetadata().addTitle(config.getTitle());
             book.getMetadata().addAuthor(new Author(config.getAuthor()));
 
+            int feedNum = 1;
             for (SyndFeed feed : feeds) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("<h1>");
@@ -105,14 +106,16 @@ public class BookMaker {
                     sb.append(feed.getLink());
                     sb.append("</p>");
                 }
-                TOCReference site = book
-                        .addSection(feed.getTitle(), new Resource(sb.toString()
-                                .getBytes("UTF-8"), new MediaType(
-                                "application/xhtml+xml", ".html")));
+                String href = "feed" + feedNum + ".html";
+                TOCReference site = book.addSection(feed.getTitle(),
+                        new Resource(href, sb.toString().getBytes("UTF-8"),
+                                href, new MediaType("application/xhtml+xml",
+                                        ".html")));
 
                 @SuppressWarnings("rawtypes")
                 Iterator iter = feed.getEntries().iterator();
 
+                int articleNum = 1;
                 while (iter.hasNext()) {
                     SyndEntry entry = (SyndEntry) iter.next();
                     StringBuilder sb2 = new StringBuilder();
@@ -143,10 +146,16 @@ public class BookMaker {
                         sb2.append(entry.getDescription().getValue());
                     }
                     sb2.append("</div>");
-                    book.addSection(site, entry.getTitle(), new Resource(sb2
-                            .toString().getBytes("UTF-8"), new MediaType(
-                            "application/xhtml+xml", ".html")));
+                    String href2 = "feed" + feedNum + "-article" + articleNum
+                            + ".html";
+                    book.addSection(site, entry.getTitle(), new Resource(href2,
+                            sb2.toString().getBytes("UTF-8"), href2,
+                            new MediaType("application/xhtml+xml", ".html")));
+
+                    articleNum++;
                 }
+
+                feedNum++;
             }
 
             EpubWriter epub = new EpubWriter();
