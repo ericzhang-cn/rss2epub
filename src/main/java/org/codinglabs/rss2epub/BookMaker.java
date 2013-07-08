@@ -5,11 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import nl.siegmann.epublib.domain.Author;
 import nl.siegmann.epublib.domain.Book;
@@ -84,6 +87,8 @@ public class BookMaker {
     public void make(String configFilePath, String outputFilePath) {
         BookConfig config = this.parseConfig(configFilePath);
         ArrayList<SyndFeed> feeds = this.readFeeds(config);
+        Pattern pattern = Pattern
+                .compile("(http[s]?)://([-a-zA-Z0-9+&@#/%?=~_|!:,.;]+)\\.(png|jpg|jpeg|gif|svg)");
 
         try {
             Book book = new Book();
@@ -146,11 +151,27 @@ public class BookMaker {
                         sb2.append(entry.getDescription().getValue());
                     }
                     sb2.append("</div>");
+
+                    String body = sb2.toString();
+                    Matcher matcher = pattern.matcher(body);
+                    int imageNum = 1;
+                    while (matcher.find()) {
+                        URL url = new URL(matcher.group(0));
+                        InputStream is = url.openStream();
+                        String imageHref = "feed" + feedNum + "-article"
+                                + articleNum + "-image" + imageNum + "."
+                                + matcher.group(3);
+                        body = body.replaceAll(matcher.group(0), imageHref);
+                        book.addResource(new Resource(is, imageHref));
+
+                        imageNum++;
+                    }
+
                     String href2 = "feed" + feedNum + "-article" + articleNum
                             + ".html";
                     book.addSection(site, entry.getTitle(), new Resource(href2,
-                            sb2.toString().getBytes("UTF-8"), href2,
-                            new MediaType("application/xhtml+xml", ".html")));
+                            body.getBytes("UTF-8"), href2, new MediaType(
+                                    "application/xhtml+xml", ".html")));
 
                     articleNum++;
                 }
