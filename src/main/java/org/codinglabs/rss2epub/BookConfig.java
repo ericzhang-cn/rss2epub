@@ -10,6 +10,10 @@ public class BookConfig {
      */
     private String author;
     /**
+     * Include images
+     */
+    private boolean image;
+    /**
      * Feed urls
      */
     private String[] feeds;
@@ -28,6 +32,14 @@ public class BookConfig {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public boolean isImage() {
+        return image;
+    }
+
+    public void setImage(boolean image) {
+        this.image = image;
     }
 
     public String[] getFeeds() {

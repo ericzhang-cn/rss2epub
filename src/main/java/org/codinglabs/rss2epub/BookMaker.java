@@ -24,6 +24,7 @@ import nl.siegmann.epublib.epub.EpubWriter;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
@@ -123,6 +124,9 @@ public class BookMaker {
                 int articleNum = 1;
                 while (iter.hasNext()) {
                     SyndEntry entry = (SyndEntry) iter.next();
+
+                    System.out.println("Get " + entry.getLink());
+
                     StringBuilder sb2 = new StringBuilder();
                     sb2.append("<h2>");
                     sb2.append(entry.getTitle());
@@ -146,25 +150,31 @@ public class BookMaker {
                     }
                     sb2.append("<div>");
                     if (!entry.getContents().isEmpty()) {
-                        sb2.append(entry.getContents().get(0));
+                        sb2.append(((SyndContent) (entry.getContents().get(0)))
+                                .getValue());
                     } else {
                         sb2.append(entry.getDescription().getValue());
                     }
                     sb2.append("</div>");
-
                     String body = sb2.toString();
-                    Matcher matcher = pattern.matcher(body);
-                    int imageNum = 1;
-                    while (matcher.find()) {
-                        URL url = new URL(matcher.group(0));
-                        InputStream is = url.openStream();
-                        String imageHref = "feed" + feedNum + "-article"
-                                + articleNum + "-image" + imageNum + "."
-                                + matcher.group(3);
-                        body = body.replaceAll(matcher.group(0), imageHref);
-                        book.addResource(new Resource(is, imageHref));
 
-                        imageNum++;
+                    if (config.isImage()) {
+                        Matcher matcher = pattern.matcher(body);
+                        int imageNum = 1;
+                        while (matcher.find()) {
+
+                            System.out.println("Get " + matcher.group(0));
+
+                            URL url = new URL(matcher.group(0));
+                            InputStream is = url.openStream();
+                            String imageHref = "feed" + feedNum + "-article"
+                                    + articleNum + "-image" + imageNum + "."
+                                    + matcher.group(3);
+                            body = body.replaceAll(matcher.group(0), imageHref);
+                            book.addResource(new Resource(is, imageHref));
+
+                            imageNum++;
+                        }
                     }
 
                     String href2 = "feed" + feedNum + "-article" + articleNum
