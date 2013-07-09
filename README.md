@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ericzhang-cn/rss2epub.png)](https://travis-ci.org/ericzhang-cn/rss2epub])
+
 将RSS内容转为epub格式电子书的工具
 
 # 使用方法
