@@ -104,6 +104,7 @@ public class BookMaker {
         Book book = new Book();
         book.getMetadata().addTitle(config.getTitle());
         book.getMetadata().addAuthor(new Author(config.getAuthor()));
+        book.getMetadata().setLanguage("zh-CN");
 
         int feedNum = 1;
         for (SyndFeed feed : feeds) {
@@ -208,17 +209,28 @@ public class BookMaker {
 
                 String href2 = "feed" + feedNum + "-article" + articleNum
                         + ".html";
+                StringBuilder sb3 = new StringBuilder();
+                sb3.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+                sb3.append("<head>");
+                sb3.append("<title>");
+                sb3.append(entry.getTitle());
+                sb3.append("</title>");
+                sb3.append("</head>");
+                sb3.append("<body>");
+                sb3.append(body);
+                sb3.append("</body>");
+                sb3.append("</html>");
                 try {
                     book.addSection(site, entry.getTitle(), new Resource(href2,
-                            body.getBytes("UTF-8"), href2, new MediaType(
-                                    "application/xhtml+xml", ".html")));
+                            sb3.toString().getBytes("UTF-8"), href2,
+                            new MediaType("application/xhtml+xml", ".html")));
                 } catch (UnsupportedEncodingException e) {
                     log.warn("Get \"" + entry.getLink() + "\" Failed");
                     continue;
                 }
 
                 articleNum++;
-                log.info("Get \"" + feed.getLink() + "\" Success");
+                log.info("Get \"" + entry.getLink() + "\" Success");
             }
 
             feedNum++;
