@@ -48,9 +48,10 @@ feeds:
 + 纯命令行工具，不依赖其它电子书管理工具，方便与其它脚本配合使用。
 
 # 依赖项目
-+ SnakeYAML - 用于解析YAML文件
-+ Rome - 用于读取和解析RSS源
-+ Epublib - 用于生成epub格式电子书
++ [Log4j](http://logging.apache.org/log4j/1.2/) - 日志库
++ [SnakeYAML](https://code.google.com/p/snakeyaml/) - 用于解析YAML文件
++ [Rome](https://rometools.jira.com/wiki/display/ROME/Home) - 用于读取和解析RSS源
++ [Epublib](http://www.siegmann.nl/epublib) - 用于生成epub格式电子书
 
 Maven会自动处理这些依赖，因此你在编译和运行程序时不需显式关心依赖项目。
 此处列出仅表示对这些项目的感谢。
