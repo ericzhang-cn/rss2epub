@@ -23,6 +23,7 @@ import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.domain.TOCReference;
 import nl.siegmann.epublib.epub.EpubWriter;
 
+import org.apache.log4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -33,6 +34,8 @@ import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 
 public class BookMaker {
+    private Logger log = Logger.getLogger(BookMaker.class);
+
     /**
      * Parse configuration file
      * 
@@ -47,9 +50,11 @@ public class BookMaker {
             config = (BookConfig) yaml.load(new FileInputStream(new File(
                     configFilePath)));
         } catch (FileNotFoundException e) {
+            log.error("Configuration file does not exist");
             return null;
         }
 
+        log.info("Configuration loaded");
         return config;
     }
 
@@ -69,11 +74,14 @@ public class BookMaker {
                 XmlReader reader = new XmlReader(url);
                 SyndFeed feed = new SyndFeedInput().build(reader);
                 feeds.add(feed);
+                log.info("Read rss source \"" + feedUrl + "\" Success");
             } catch (Exception e) {
+                log.warn("Read rss source \"" + feedUrl + "\" Failed");
                 continue;
             }
         }
 
+        log.info("Read rss completed");
         return feeds;
     }
 
@@ -91,7 +99,7 @@ public class BookMaker {
         BookConfig config = this.parseConfig(configFilePath);
         ArrayList<SyndFeed> feeds = this.readFeeds(config);
         Pattern pattern = Pattern
-                .compile("src=\"(http[s]?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]+)\\.(png|jpg|jpeg|gif|svg)?([^\"]*)\"");
+                .compile("src=\"(http[s]?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]+)\\.(png|jpg|jpeg|gif|svg)\\??([^\".]*)\"");
 
         Book book = new Book();
         book.getMetadata().addTitle(config.getTitle());
@@ -120,6 +128,7 @@ public class BookMaker {
                         .toString().getBytes("UTF-8"), href, new MediaType(
                         "application/xhtml+xml", ".html")));
             } catch (UnsupportedEncodingException e) {
+                log.warn("Get \"" + feed.getLink() + "\" Failed");
                 continue;
             }
 
@@ -129,8 +138,6 @@ public class BookMaker {
             int articleNum = 1;
             while (iter.hasNext()) {
                 SyndEntry entry = (SyndEntry) iter.next();
-
-                System.out.println("Get " + entry.getLink());
 
                 StringBuilder sb2 = new StringBuilder();
                 sb2.append("<h2>");
@@ -166,20 +173,20 @@ public class BookMaker {
                     Matcher matcher = pattern.matcher(body);
                     int imageNum = 1;
                     while (matcher.find()) {
-
-                        System.out.println("Get " + matcher.group(0));
-
                         URL url;
+                        String urlString = matcher.group(1) + "."
+                                + matcher.group(2);
                         try {
-                            url = new URL(matcher.group(1) + "."
-                                    + matcher.group(2));
+                            url = new URL(urlString);
                         } catch (MalformedURLException e) {
+                            log.warn("Get image \"" + urlString + "\" Failed");
                             continue;
                         }
                         InputStream is;
                         try {
                             is = url.openStream();
                         } catch (IOException e) {
+                            log.warn("Get image \"" + urlString + "\" Failed");
                             continue;
                         }
                         String imageHref = "feed" + feedNum + "-article"
@@ -190,10 +197,12 @@ public class BookMaker {
                         try {
                             book.addResource(new Resource(is, imageHref));
                         } catch (IOException e) {
+                            log.warn("Get image \"" + urlString + "\" Failed");
                             continue;
                         }
 
                         imageNum++;
+                        log.info("Get image \"" + urlString + "\" Success");
                     }
                 }
 
@@ -204,10 +213,12 @@ public class BookMaker {
                             body.getBytes("UTF-8"), href2, new MediaType(
                                     "application/xhtml+xml", ".html")));
                 } catch (UnsupportedEncodingException e) {
+                    log.warn("Get \"" + entry.getLink() + "\" Failed");
                     continue;
                 }
 
                 articleNum++;
+                log.info("Get \"" + feed.getLink() + "\" Success");
             }
 
             feedNum++;
