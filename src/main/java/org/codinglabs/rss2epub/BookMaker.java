@@ -99,7 +99,7 @@ public class BookMaker {
         BookConfig config = this.parseConfig(configFilePath);
         ArrayList<SyndFeed> feeds = this.readFeeds(config);
         Pattern pattern = Pattern
-                .compile("src=\"(http[s]?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]+)\\.(png|jpg|jpeg|gif|svg)\\??([^\".]*)\"");
+                .compile("src=\"(http[s]?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]+)\\.(png|jpg|jpeg|gif|svg)(\\??[^\".]*)\"");
 
         Book book = new Book();
         book.getMetadata().addTitle(config.getTitle());
@@ -192,8 +192,8 @@ public class BookMaker {
                         String imageHref = "feed" + feedNum + "-article"
                                 + articleNum + "-image" + imageNum + "."
                                 + matcher.group(2);
-                        body = body.replaceAll(matcher.group(0), "src=\""
-                                + imageHref + "\"");
+                        body = body.replace(urlString + matcher.group(3),
+                                imageHref);
                         try {
                             book.addResource(new Resource(is, imageHref));
                         } catch (IOException e) {
