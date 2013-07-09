@@ -1,6 +1,7 @@
 title: Feeds to eBook # 标题
 author: rss2epub      # 作者
 image: true           # 是否包含图片
+cover: cover.jpg      # 封面图片
 feeds:                # RSS源
     - http://www.guokr.com/rss/
     - http://www.36kr.com/feed/atom

@@ -14,6 +14,10 @@ public class BookConfig {
      */
     private boolean image;
     /**
+     * Book cover image
+     */
+    private String cover;
+    /**
      * Feed urls
      */
     private String[] feeds;
@@ -40,6 +44,14 @@ public class BookConfig {
 
     public void setImage(boolean image) {
         this.image = image;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public String[] getFeeds() {

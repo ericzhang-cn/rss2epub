@@ -105,10 +105,23 @@ public class BookMaker {
         book.getMetadata().addTitle(config.getTitle());
         book.getMetadata().addAuthor(new Author(config.getAuthor()));
         book.getMetadata().setLanguage("zh-CN");
+        try {
+            book.setCoverImage(new Resource(new FileInputStream(config
+                    .getCover()), "cover.jpg"));
+        } catch (IOException e) {
+            log.warn("Set cover image Failed");
+        }
 
         int feedNum = 1;
         for (SyndFeed feed : feeds) {
             StringBuilder sb = new StringBuilder();
+            sb.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+            sb.append("<head>");
+            sb.append("<title>");
+            sb.append(feed.getTitle());
+            sb.append("</title>");
+            sb.append("</head>");
+            sb.append("<body>");
             sb.append("<h1>");
             sb.append(feed.getTitle());
             sb.append("</h1>");
@@ -122,6 +135,8 @@ public class BookMaker {
                 sb.append(feed.getLink());
                 sb.append("</p>");
             }
+            sb.append("</body>");
+            sb.append("</html>");
             String href = "feed" + feedNum + ".html";
             TOCReference site;
             try {
