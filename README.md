@@ -20,7 +20,7 @@
   例如在rss2epub目录下执行
 
   ```bash
-  java -cp target/lib/*:target/rss2epub-0.0.1-SNAPSHOT.jar org.codinglabs.rss2epub.RssToEpub book.yml book.epub
+  java -cp target/lib/*;target/rss2epub-0.0.1-SNAPSHOT.jar org.codinglabs.rss2epub.RssToEpub book.yml book.epub
   ```
 
   会在当前目录生成一本名叫book.epub的电子书。
