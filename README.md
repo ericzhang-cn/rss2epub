@@ -22,7 +22,7 @@
   Linux&Mac：
 
   ```bash
-  java -cp target/lib/*:target/rss2epub-0.0.1-SNAPSHOT.jar org.codinglabs.rss2epub.RssToEpub book.yml book.epub
+  java -cp target/lib/*;target/rss2epub-0.0.1-SNAPSHOT.jar org.codinglabs.rss2epub.RssToEpub book.yml book.epub
   ```
 
   Windows：
